@@ -44,7 +44,7 @@ namespace InheritanceViewer
             return files;
         }
 
-        public List<string> GetAllFilesInProject(Project project)
+        List<string> GetAllFilesInProject(Project project)
         {
             List<string> fileList = new List<string>();
             if (project != null)
