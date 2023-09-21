@@ -6,6 +6,26 @@ using EnvDTE;
 
 using Microsoft.VisualStudio.Shell;
 
+using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System;
+using System.ComponentModel.Design;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
+using Microsoft.VisualStudio.Shell.Services;
+using System.Collections.Generic;
+//using System.Windows.Forms;
+using System.Linq;
+//using Microsoft.VisualStudio.VCProjectEngine;
+using System.IO;
+using System.Diagnostics;
+using Microsoft.VisualStudio;
+
 
 namespace InheritanceViewer
 {
@@ -31,7 +51,7 @@ namespace InheritanceViewer
                     // Hier ist das zugehörige Projekt zu dem aktiven Dokument.
                     Project project = projectItem.ContainingProject;
                     // Du kannst das "project" Objekt jetzt verwenden, um auf Projekteigenschaften oder andere Informationen zuzugreifen.
-                    //var test = project.Name;
+                    var test = project.Name;
 
                     files = GetAllFilesInProject(project);
                 }
@@ -44,7 +64,7 @@ namespace InheritanceViewer
             return files;
         }
 
-        List<string> GetAllFilesInProject(Project project)
+        public List<string> GetAllFilesInProject(Project project)
         {
             List<string> fileList = new List<string>();
             if (project != null)

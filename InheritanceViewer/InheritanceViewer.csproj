@@ -50,6 +50,7 @@
     <Compile Include="InheritanceCommand.cs" />
     <Compile Include="Inheritancefinder.cs" />
     <Compile Include="Inheritedbybuilder.cs" />
+    <Compile Include="OpenDocumentHandler.cs" />
     <Compile Include="OpenedFileHandler.cs" />
     <Compile Include="ProjectFilesFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
