@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -19,7 +20,7 @@ namespace InheritanceViewer
 
         private string _name_of_file_to_write;
 
-        private string _dgml_template = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<DirectedGraph GraphDirection = \"LeftToRight\" Layout=\"Sugiyama\" Title=\"InheritanceGraph\" xmlns=\"http://schemas.microsoft.com/vs/2009/dgml\">\n</DirectedGraph>";
+        private string _dgml_template = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- If you see this text the DGML-Editor for Visual Studio might not be installed! Check Extras->Tools and Features->DGML-Editor-->\n<DirectedGraph GraphDirection = \"LeftToRight\" Layout=\"Sugiyama\" Title=\"InheritanceGraph\" xmlns=\"http://schemas.microsoft.com/vs/2009/dgml\">\n</DirectedGraph>";
 
         public void write_file(List<string> klassen,List<Tuple<string , string>> vererbungen)
         {
@@ -70,21 +71,9 @@ namespace InheritanceViewer
 
         public void OpenDGMLFileInEditor()
         {
-
-            //IVsUIShellOpenDocument openDoc;// = ServiceProvider.GetService(typeof(SVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
-            IVsUIShellOpenDocument openDoc = Package.GetGlobalService(typeof(SVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
-            if (openDoc != null)
-            {
-                Guid logicalView = VSConstants.LOGVIEWID_Designer;
-                IVsUIHierarchy hierarchy;
-                uint itemID;
-                IVsWindowFrame frame;
-                Microsoft.VisualStudio.OLE.Interop.IServiceProvider sp;
-                int hr = openDoc.OpenDocumentViaProject(_name_of_file_to_write, logicalView, out sp, out hierarchy, out itemID, out frame);
-
-                ErrorHandler.ThrowOnFailure(hr);
-                frame.Show();
-            }
+            OpenDocumentHandler ODH = new OpenDocumentHandler();
+            ODH.close_if_file_open(_name_of_file_to_write);
+            ODH.openfile(_name_of_file_to_write);
         }
 
     }

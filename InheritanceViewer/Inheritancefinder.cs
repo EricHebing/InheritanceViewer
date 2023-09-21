@@ -57,14 +57,15 @@ namespace InheritanceViewer
             //Es wird zuerst nach "class" gesucht. "\s+.+\s*" Es dürfen beliebige Zeichen und linebreaks kommen.
             //"\{" es muss eine öffnende geschwiefte Klammer auftauchen."(?:.|n)*?" Es dürfen beliebig viele Zeichen folgen(? so wenig wie mögich). Am Ende muss ein linebreack
             //sich schließende geschwiefte Klammern und ein Semikolon kommen.
-            string classdefs = @"class\s+.+\s*\{(?:.|\n)*?\n\};";
+            //string classdefs = @"class\s+.+\s*\{(?:.|\n)*?\n\};";
+            string classdefs = @"class\s+.+\s*\{";
 
             Regex rg = new Regex(classdefs);
 
             MatchCollection matchedclassdefs = rg.Matches(filetext);
             List<string> classes = matchedclassdefs.Cast<Match>().Select(m => m.Value).ToList();
             //(?<=:|,) *(public|protected|private)* *.*?(?=,|{)
-            string inheritances = @"(?<=:|,) *(public|protected|private)* *.*?(?=,|{)";
+            string inheritances = @"(?<=:|,) *(public|protected|private)* *.*?(?=,|{|\n|\r)";
             //Holfe für jede Klassendefinition die Inheritance
             Regex rg_inheritance = new Regex(inheritances);
             foreach (var lclass in classes)
