@@ -38,7 +38,6 @@ namespace InheritanceViewer
 
                 var adcitveEditor = document.SelectedItems;
 
-
                 IVsTextManager textManager = Package.GetGlobalService(typeof(SVsTextManager)) as IVsTextManager;
                 IVsTextView textView = null;
                 textManager.GetActiveView(1, null, out textView);
@@ -70,7 +69,6 @@ namespace InheritanceViewer
         {
             //Lookbehind a "class" and non-capturing whitespaces. Capture all characters until next whitespace or ":" or "{"
             string class_name_regex = @"(?<=class)(?: *)[^\s:}]*";
-
 
             Regex rg = new Regex(class_name_regex);
 

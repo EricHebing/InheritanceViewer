@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace InheritanceViewer
 {
+    using InheritanceInformation = Dictionary<string, List<string>>;
     public class Inheritedbybuilder
     {
         //Standard-constructor
@@ -15,9 +16,9 @@ namespace InheritanceViewer
         }
 
         //gets a list of classes and their inheritances. Returns a list of classes and a list of the classes that inherit from this one
-        public Dictionary<string, List<string>> BuildInheritedByList(Dictionary<string, List<string>> class_inheritances)
+        public InheritanceInformation BuildInheritedByList(Dictionary<string, List<string>> class_inheritances)
         {
-            Dictionary<string, List<string>> lclasses_inherited_by = new Dictionary<string, List<string>>();
+            InheritanceInformation lclasses_inherited_by = new InheritanceInformation();
 
             foreach (var entry in class_inheritances)
             {

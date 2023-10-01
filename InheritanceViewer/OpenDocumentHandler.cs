@@ -21,8 +21,6 @@ namespace InheritanceViewer
             IVsUIShellOpenDocument openDoc = Package.GetGlobalService(typeof(SVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
             if (openDoc != null)
             {
-
-
                 Guid logicalView = VSConstants.LOGVIEWID_Designer;
                 Microsoft.VisualStudio.OLE.Interop.IServiceProvider sp;
                 IVsUIHierarchy hierarchy;
@@ -40,7 +38,6 @@ namespace InheritanceViewer
 
         public void close_if_file_open(string filename)
         {
-
             IVsUIShellOpenDocument openDoc = Package.GetGlobalService(typeof(SVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
             if (openDoc != null)
             {
