@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 
 namespace InheritanceViewer
 {
+    using InheritanceInformation = Dictionary<string, List<string>>;
+
     public class Inheritancefinder
     {
         //Standardkonstruktor
@@ -16,20 +18,21 @@ namespace InheritanceViewer
 
         }
 
-        public Dictionary<string, List<string>> BuildUpInheritanceDictionary(List<string> alistoffiles)
+        //Each file of the given list is searched for class declarations. Classes and inheritance informations retrieved are returned in a dictionary
+        public InheritanceInformation BuildUpInheritanceDictionary(List<string> listoffiles)
         {
-            Dictionary<string, List<string>> linheritancedictionary = new Dictionary<string, List<string>>();
+            InheritanceInformation linheritancedictionary = new InheritanceInformation();
 
-            foreach (var file in alistoffiles)
+            foreach (var file in listoffiles)
             {
                 var classes_of_file = Findclassesandinheritance(file);
                 foreach (var class_info in classes_of_file)
                 {
-                    if(!linheritancedictionary.ContainsKey(class_info.Item1))
+                    if (!linheritancedictionary.ContainsKey(class_info.Key))
                     {
-                        linheritancedictionary.Add(class_info.Item1, new List<string>());
+                        linheritancedictionary.Add(class_info.Key, new List<string>());
                     }
-                    linheritancedictionary[class_info.Item1].AddRange(class_info.Item2);
+                    linheritancedictionary[class_info.Key].AddRange(class_info.Value);
                 }
             }
 
@@ -38,73 +41,82 @@ namespace InheritanceViewer
 
 
         //
-        public List<Tuple<string, List<string>>> Findclassesandinheritance(string afilepath)
+        public InheritanceInformation Findclassesandinheritance(string afilepath)
         {
-            List<Tuple<string, List<string>>> foundclasses = new List<Tuple<string, List<string>>>();
-
-            //Öffnen des files
+            InheritanceInformation foundclasses = new InheritanceInformation();
 
             if (!File.Exists(afilepath))
-            {
-                //check if file exists and get string
+            {//check if file exists
                 return foundclasses;
             }
+            string filetext = GetTextOfFile(afilepath);
 
-            StreamReader reader = new StreamReader(afilepath);
-            string filetext = reader.ReadToEnd();
-            //Hole über Regex alle Klassendefinitionen
-
-            //Es wird zuerst nach "class" gesucht. "\s+.+\s*" Es dürfen beliebige Zeichen und linebreaks kommen.
-            //"\{" es muss eine öffnende geschwiefte Klammer auftauchen."(?:.|n)*?" Es dürfen beliebig viele Zeichen folgen(? so wenig wie mögich). Am Ende muss ein linebreack
-            //sich schließende geschwiefte Klammern und ein Semikolon kommen.
-            //string classdefs = @"class\s+.+\s*\{(?:.|\n)*?\n\};";
-            string classdefs = @"class\s+.+\s*\{";
-
-            Regex rg = new Regex(classdefs);
-
-            MatchCollection matchedclassdefs = rg.Matches(filetext);
-            List<string> classes = matchedclassdefs.Cast<Match>().Select(m => m.Value).ToList();
-            //(?<=:|,) *(public|protected|private)* *.*?(?=,|{)
-            string inheritances = @"(?<=:|,) *(public|protected|private)* *.*?(?=,|{|\n|\r)";
-            //Holfe für jede Klassendefinition die Inheritance
-            Regex rg_inheritance = new Regex(inheritances);
-            foreach (var lclass in classes)
-            {//Finde die Inheritance
-                MatchCollection matchedinheritances = rg_inheritance.Matches(lclass);
-                List<string> inh = matchedinheritances.Cast<Match>().Select(m => m.Value).ToList();
-
-                string classnamepattern = @"(?<=class) *.*?(?=:|{)";
-                string class_name = Regex.Match(lclass, classnamepattern).Value;
-                class_name = class_name.Trim();
-
-                Tuple<string, List<string>> class_inheritance = Tuple.Create(class_name, new List<string>());
-                
-
-
-                foreach (var relation in inh)
-                {
-                    string inherited_class = CaseInsenstiveReplace(relation, "public", "");
-                    inherited_class = CaseInsenstiveReplace(inherited_class, "private", "");
-                    inherited_class = CaseInsenstiveReplace(inherited_class, "protected", "");
-                    inherited_class = inherited_class.Replace(" ", "");
-
-                    class_inheritance.Item2.Add(inherited_class);
-
-                }
-
-                foundclasses.Add(class_inheritance);
+            List<string> ClassDeclarations = GetClassDeclarations(filetext);
+            
+            
+            foreach (var lclass in ClassDeclarations)
+            {//Find all Inheritances
+                List<string> Inheritances = GetInheritancesOfClass(lclass);
+                string ClassName = GetClassNameByDeclaration(lclass);
+                foundclasses[ClassName] = Inheritances;
             }
-
-
 
             return foundclasses;
 
         }
 
-        string CaseInsenstiveReplace(string originalString, string oldValue, string newValue)
+        private string GetClassNameByDeclaration(string ClassDeclaration)
         {
-            Regex regEx = new Regex(oldValue,
-            RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            string classnamepattern = @"(?<=class) *.*?(?=:|{)";
+            string class_name = Regex.Match(ClassDeclaration, classnamepattern).Value;
+            class_name = class_name.Trim();
+            return class_name;
+        }
+
+        private List<string> GetInheritancesOfClass(string ClassDeclaration)
+        {
+            string inheritances = @"(?<=:|,) *(public|protected|private)* *.*?(?=,|{|\n|\r)";
+            Regex rg_inheritance = new Regex(inheritances);
+            MatchCollection matchedinheritances = rg_inheritance.Matches(ClassDeclaration);
+            List<string> inh = matchedinheritances.Cast<Match>().Select(m => m.Value).ToList();
+
+            List<string> class_inheritance = new List<string>();
+
+            foreach (var relation in inh)
+            {
+                string inherited_class = CaseInsensitiveReplace(relation, "public", "");
+                inherited_class = CaseInsensitiveReplace(inherited_class, "private", "");
+                inherited_class = CaseInsensitiveReplace(inherited_class, "protected", "");
+                inherited_class = inherited_class.Replace(" ", "");
+
+                class_inheritance.Add(inherited_class);
+
+            }
+
+            return class_inheritance;
+        }
+
+        private List<string> GetClassDeclarations(string Text)
+        {
+            string classdefs = @"class\s+.+\s*\{";
+            Regex RGClassDefs = new Regex(classdefs);
+
+            MatchCollection matchedclassdefs = RGClassDefs.Matches(Text);
+            List<string> classes = matchedclassdefs.Cast<Match>().Select(m => m.Value).ToList();
+            return classes;
+        }
+
+        private string GetTextOfFile(string afilepath)
+        {
+            StreamReader reader = new StreamReader(afilepath);
+            string filetext = reader.ReadToEnd();
+            return filetext;
+        }
+
+        //Replaces all occurences of <oldvalue> within the originalString by <newValue>
+        string CaseInsensitiveReplace(string originalString, string oldValue, string newValue)
+        {
+            Regex regEx = new Regex(oldValue, RegexOptions.IgnoreCase | RegexOptions.Multiline);
             return regEx.Replace(originalString, newValue);
         }
 
