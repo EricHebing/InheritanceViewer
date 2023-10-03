@@ -20,6 +20,8 @@ namespace InheritanceViewer
         string _opened_file_text;
         bool _success = false;
 
+        List<string> _declaredClassesInFile;
+
         public bool Success
         {
             get { return _success; }   // get method
@@ -28,6 +30,11 @@ namespace InheritanceViewer
         public string Name_of_selected_class
         {
             get { return _name_of_selected_class; } // get method
+        }
+
+        public List<string> DeclaredClassesInFile
+        {
+            get { return _declaredClassesInFile; }
         }
 
         public OpenedFileHandler()
@@ -48,7 +55,7 @@ namespace InheritanceViewer
                 object holder;
                 userData.GetData(ref guidViewHost, out holder);
                 IWpfTextViewHost viewHost = (IWpfTextViewHost)holder;
-                string _opened_file_text = viewHost.TextView.TextSnapshot.GetText();
+                _opened_file_text = viewHost.TextView.TextSnapshot.GetText();
                 var position_of_cursor = viewHost.TextView.Selection.ActivePoint.Position;
 
                 var test_include = viewHost.TextView.TextSnapshot.GetLineNumberFromPosition(position_of_cursor.Position);
@@ -56,6 +63,8 @@ namespace InheritanceViewer
                 var currentLine = viewHost.TextView.TextSnapshot.GetLineFromLineNumber(test_include);
                 string lineText = currentLine.GetText().TrimStart();
                 _name_of_selected_class = get_class_name_by_line(lineText);
+                ParseClassesInFile();
+
             }
             catch(Exception e)
             {
@@ -83,6 +92,15 @@ namespace InheritanceViewer
                 return "";
             }
             
+        }
+
+        private void ParseClassesInFile()
+        {
+            //Lookbehind a "class" and non-capturing whitespaces. Capture all characters until next whitespace or ":" or "{"
+            string class_name_regex = @"(?<=class)(?: *)[^\s:}]*";
+
+            MatchCollection DeclaredClasses = Regex.Matches(_opened_file_text, class_name_regex);
+            _declaredClassesInFile = DeclaredClasses.Cast<Match>().Select(m => m.Value).ToList();
         }
 
     }

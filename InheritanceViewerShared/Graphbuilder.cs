@@ -54,6 +54,30 @@ namespace InheritanceViewer
             return lsucces;
         }
 
+
+        public bool build_up_graph(Dictionary<string, List<string>> ainheritances, Dictionary<string, List<string>> ainheritances_by, List<string> Classes)
+        {
+            bool lsuccess = true;
+
+            foreach (string lclass_name in Classes)
+            {
+                //class was already added, skip it to avoid duplicates in graph
+                if(_classes.Contains(lclass_name))
+                {
+                    continue;
+                }
+
+                add_inheritance_infos(ainheritances, lclass_name, InheritDirection.InheritedFrom);
+                add_inheritance_infos(ainheritances_by, lclass_name, InheritDirection.InheritedBy);
+            }
+
+            //aselected_class was added twice to the list, so delete it
+
+            _classes = _classes.Distinct().ToList();
+
+            return lsuccess;
+        }
+
         void add_inheritance_infos(Dictionary<string, List<string>> ainherit, string aclass, InheritDirection adirection )
         {
             _classes.Add(aclass);

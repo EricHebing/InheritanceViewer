@@ -95,15 +95,6 @@ namespace InheritanceViewer
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
-            //Build up informations of opened File.
-
-            //Get all files of the project of the opened file
-            OpenedFileHandler op = new OpenedFileHandler();
-            if (op.Success == false)
-            {//Show an error-message
-                //TODO:
-            }
-
             //Get name of selected class in active document
             OpenedFileHandler lopened_file_handler = new OpenedFileHandler();
             if (!lopened_file_handler.Success)
@@ -127,7 +118,7 @@ namespace InheritanceViewer
 
             //Build up nodes(classes) and edges (inheritances)
             Graphbuilder lgraphbuilder = new Graphbuilder();
-            lgraphbuilder.build_up_graph(inheritDictionary, linherited_by_dictionary, lopened_file_handler.Name_of_selected_class);
+            lgraphbuilder.build_up_graph(inheritDictionary, linherited_by_dictionary, lopened_file_handler.DeclaredClassesInFile);
 
             //Write the dgml-file by the selected class and open the DGM-File
 
