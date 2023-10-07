@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
-using InheritanceViewerShared;
 
 namespace InheritanceViewer
 {
@@ -52,10 +51,7 @@ namespace InheritanceViewer
             }
             string filetext = GetTextOfFile(afilepath);
 
-            CommentRemover ComRemover = new CommentRemover();
-            string FiletextWithoutComments = ComRemover.removeCommentsInString(filetext);
-
-            List<string> ClassDeclarations = GetClassDeclarations(FiletextWithoutComments);
+            List<string> ClassDeclarations = GetClassDeclarations(filetext);
             
             
             foreach (var lclass in ClassDeclarations)
