@@ -5,16 +5,7 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InheritanceViewer", "InheritanceViewer.csproj", "{B385F5A6-54B3-4319-9EA4-0D3E32B2C9BE}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "InheritanceViewerShared", "..\InheritanceViewerShared\InheritanceViewerShared.shproj", "{32A4901D-09CA-4751-A010-1CAFCB709F2C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InheritanceViewer22", "..\InheritanceViewer22\InheritanceViewer22.csproj", "{091BCFA1-0EAA-460C-BA0F-3604B2B32222}"
-EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\InheritanceViewerShared\InheritanceViewerShared.projitems*{091bcfa1-0eaa-460c-ba0f-3604b2b32222}*SharedItemsImports = 4
-		..\InheritanceViewerShared\InheritanceViewerShared.projitems*{32a4901d-09ca-4751-a010-1cafcb709f2c}*SharedItemsImports = 13
-		..\InheritanceViewerShared\InheritanceViewerShared.projitems*{b385f5a6-54b3-4319-9ea4-0d3e32b2c9be}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -24,10 +15,6 @@ Global
 		{B385F5A6-54B3-4319-9EA4-0D3E32B2C9BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B385F5A6-54B3-4319-9EA4-0D3E32B2C9BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B385F5A6-54B3-4319-9EA4-0D3E32B2C9BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{091BCFA1-0EAA-460C-BA0F-3604B2B32222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{091BCFA1-0EAA-460C-BA0F-3604B2B32222}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{091BCFA1-0EAA-460C-BA0F-3604B2B32222}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{091BCFA1-0EAA-460C-BA0F-3604B2B32222}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
