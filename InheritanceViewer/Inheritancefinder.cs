@@ -51,9 +51,11 @@ namespace InheritanceViewer
             }
             string filetext = GetTextOfFile(afilepath);
 
-            List<string> ClassDeclarations = GetClassDeclarations(filetext);
-            
-            
+            CommentRemover ComRemover = new CommentRemover();
+            string FiletextWithoutComments = ComRemover.RemoveCommentsInString(filetext);
+
+            List<string> ClassDeclarations = GetClassDeclarations(FiletextWithoutComments);
+
             foreach (var lclass in ClassDeclarations)
             {//Find all Inheritances
                 List<string> Inheritances = GetInheritancesOfClass(lclass);

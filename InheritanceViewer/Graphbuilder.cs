@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace InheritanceViewer
 {
+    using InheritanceInformation = Dictionary<string, List<string>>;
+    using Inheritance = Tuple<string, string>;
+    using InheritanceLinks = List<Tuple<string,string>>;
+    
+
     enum InheritDirection
     {
         InheritedFrom,
@@ -19,61 +24,66 @@ namespace InheritanceViewer
         List<string> _classes = new List<string>();
 
         //inheritances are handled as edged in the graph to built
-        List<Tuple<string, string>> _inheritances = new List<Tuple<string, string>>();
+        InheritanceLinks _inheritances = new InheritanceLinks();
 
         public List<string> Classes
         {
             get { return _classes; }
         }
 
-        public List<Tuple<string, string>> Inheritances
+        public InheritanceLinks Inheritances
         {
             get { return _inheritances; }
         }
-
-
-
 
         public Graphbuilder()
         {
 
         }
 
-        public bool build_up_graph(Dictionary<string, List<string>> ainheritances, Dictionary<string, List<string>> ainheritances_by, string aselected_class)
+        public bool build_up_graph(InheritanceInformation ainheritances, InheritanceInformation ainheritances_by, List<string> Classes)
         {
-            bool lsucces = true;
+            bool lsuccess = true;
 
-            add_inheritance_infos(ainheritances, aselected_class, InheritDirection.InheritedFrom);
-            add_inheritance_infos(ainheritances_by, aselected_class, InheritDirection.InheritedBy);
+            foreach (string lclass_name in Classes)
+            {
+                //class was already added, skip it to avoid duplicates in graph
+                if (_classes.Contains(lclass_name))
+                {
+                    continue;
+                }
 
+                add_inheritance_infos(ainheritances, lclass_name, InheritDirection.InheritedFrom);
+                add_inheritance_infos(ainheritances_by, lclass_name, InheritDirection.InheritedBy);
+            }
 
             //aselected_class was added twice to the list, so delete it
 
             _classes = _classes.Distinct().ToList();
 
-            return lsucces;
+            return lsuccess;
         }
-
-        void add_inheritance_infos(Dictionary<string, List<string>> ainherit, string aclass, InheritDirection adirection )
+        void add_inheritance_infos(InheritanceInformation InheritInfo, string aclass, InheritDirection direction )
         {
             _classes.Add(aclass);
             List<string> inheritances = new List<string>();
 
-            if (!ainherit.TryGetValue(aclass, out inheritances))
+            //In case given class is not found in InheritanceInformation return as no additional Information can be gathered
+            if (!InheritInfo.TryGetValue(aclass, out inheritances))
                 return;
 
-            foreach (var item in ainherit[aclass])
+            foreach (var item in InheritInfo[aclass])
             {
-                if (adirection == InheritDirection.InheritedFrom)
+                if (direction == InheritDirection.InheritedFrom)
                 {
-                    _inheritances.Add(new Tuple<string, string>(aclass, item));
+                    _inheritances.Add(new Inheritance(aclass, item));
                     
                 }
-                else if (adirection == InheritDirection.InheritedBy)
+                else if (direction == InheritDirection.InheritedBy)
                 {
-                    _inheritances.Add(new Tuple<string, string>(item, aclass));
+                    _inheritances.Add(new Inheritance(item, aclass));
                 }
-                add_inheritance_infos(ainherit, item, adirection);
+                add_inheritance_infos(InheritInfo, item, direction);
             }
 
         }

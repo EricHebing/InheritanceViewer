@@ -45,12 +45,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CommentRemover.cs" />
     <Compile Include="DgmlWriter.cs" />
     <Compile Include="Graphbuilder.cs" />
     <Compile Include="InheritanceCommand.cs" />
     <Compile Include="Inheritancefinder.cs" />
     <Compile Include="Inheritedbybuilder.cs" />
-    <Compile Include="OpenDocumentHandler.cs" />
+    <Compile Include="DocumentOpener.cs" />
     <Compile Include="OpenedFileHandler.cs" />
     <Compile Include="ProjectFilesFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

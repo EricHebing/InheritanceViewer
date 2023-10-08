@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-using EnvDTE;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 
@@ -16,18 +11,21 @@ namespace InheritanceViewer
 {
     public class OpenedFileHandler
     {
-        string _name_of_selected_class;
-        string _opened_file_text;
-        bool _success = false;
+        string _OpenedFileText;
+
+        //Opening File and Parsing Class Declarations without an error.
+        bool _Success = false;
+        
+        List<string> _declaredClassesInFile;
 
         public bool Success
         {
-            get { return _success; }   // get method
+            get { return _Success; }
         }
 
-        public string Name_of_selected_class
+        public List<string> DeclaredClassesInFile
         {
-            get { return _name_of_selected_class; } // get method
+            get { return _declaredClassesInFile; }
         }
 
         public OpenedFileHandler()
@@ -35,8 +33,6 @@ namespace InheritanceViewer
             try
             {
                 var document = Package.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
-
-                var adcitveEditor = document.SelectedItems;
 
                 IVsTextManager textManager = Package.GetGlobalService(typeof(SVsTextManager)) as IVsTextManager;
                 IVsTextView textView = null;
@@ -48,41 +44,26 @@ namespace InheritanceViewer
                 object holder;
                 userData.GetData(ref guidViewHost, out holder);
                 IWpfTextViewHost viewHost = (IWpfTextViewHost)holder;
-                string _opened_file_text = viewHost.TextView.TextSnapshot.GetText();
-                var position_of_cursor = viewHost.TextView.Selection.ActivePoint.Position;
 
-                var test_include = viewHost.TextView.TextSnapshot.GetLineNumberFromPosition(position_of_cursor.Position);
+                _OpenedFileText = viewHost.TextView.TextSnapshot.GetText();
 
-                var currentLine = viewHost.TextView.TextSnapshot.GetLineFromLineNumber(test_include);
-                string lineText = currentLine.GetText().TrimStart();
-                _name_of_selected_class = get_class_name_by_line(lineText);
+                ParseClassesInFile();
             }
             catch(Exception e)
             {
-                _success = false;
+                _Success = false;
                 return;
             }
-            _success = true;
+            _Success = true;
         }
 
-        static public string get_class_name_by_line(string aline)
+        private void ParseClassesInFile()
         {
             //Lookbehind a "class" and non-capturing whitespaces. Capture all characters until next whitespace or ":" or "{"
-            string class_name_regex = @"(?<=class)(?: *)[^\s:}]*";
+            const string class_name_regex = @"(?<=class) *[^\s:};]* *(?=:|[ \t\n]*{|{)";
 
-            Regex rg = new Regex(class_name_regex);
-
-            Match matchedclassdefs = rg.Match(aline);
-            if (matchedclassdefs.Success)
-            {
-                string class_name = matchedclassdefs.Value.Trim();
-                return class_name;
-            }
-            else
-            {
-                return "";
-            }
-            
+            MatchCollection DeclaredClasses = Regex.Matches(_OpenedFileText, class_name_regex);
+            _declaredClassesInFile = DeclaredClasses.Cast<Match>().Select(m => m.Value.Trim()).ToList();
         }
 
     }
