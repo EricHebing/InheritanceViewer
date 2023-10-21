@@ -1,6 +1,9 @@
 # InheritanceViewer
 A Visual Studio extension (VSIX) to  graphically represent C++ Inheritances
 
+![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/ee2e9865-b387-4f1d-bede-5c2c0e3d213c)
+
+
 # How to Use
 ![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/25211a10-6153-4900-b971-1d82a7eefdd2)
 
