@@ -144,6 +144,16 @@ namespace InheritanceViewer
             {
                 vsdoc = dte.ActiveDocument;
                 filename = vsdoc.FullName;
+
+
+                if (vsdoc.Object("TextDocument") is TextDocument textDocument)
+                {
+                    // Text aus dem Dokument abrufen
+                    string text = textDocument.StartPoint.CreateEditPoint().GetText(textDocument.EndPoint);
+
+                    // Jetzt kannst du den Text verwenden, wie du möchtest
+                    Console.WriteLine("Text aus dem Dokument:\n" + text);
+                }
             }
 
             Project lproject = null;
