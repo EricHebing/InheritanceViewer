@@ -15,63 +15,6 @@ namespace InheritanceViewer
         {
         }
 
-        public List<string> GetAllProjectFilesOfActiveDocument()
-        {
-            List<string> files = new List<string>(); 
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-
-            if (dte != null && dte.ActiveDocument != null)
-            {
-                Document activeDocument = dte.ActiveDocument;
-                ProjectItem projectItem = activeDocument.ProjectItem;
-
-                if (projectItem != null && projectItem.ContainingProject != null)
-                {
-                    Project ProjectOfActiveDocument = projectItem.ContainingProject;
-
-
-                    files = GetAllFilesInProject(ProjectOfActiveDocument);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Error: Active File is not part of any Project!");
-                }
-            }
-            return files;
-        }
-
-        private List<string> GetAllFilesInProject(Project project)
-        {
-            List<string> fileList = new List<string>();
-            if (project != null)
-            {
-                foreach (ProjectItem item in project.ProjectItems)
-                {
-                    // Collect all files recursively
-                    GetAllFilesRecursive(item, fileList);
-                }
-            }
-            return fileList;
-        }
-
-        //Given a ProjectItem adds file to List or searches for files in given folder
-        private void GetAllFilesRecursive(ProjectItem projectItem, List<string> fileList)
-        {
-            if (projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile)
-            {
-                // Projectitem is a file
-                fileList.Add(projectItem.FileNames[1]);
-            }
-            else if (projectItem.ProjectItems != null)
-            {
-                // Porjecitem is a folder
-                foreach (ProjectItem item in projectItem.ProjectItems)
-                {
-                    GetAllFilesRecursive(item, fileList);
-                }
-            }
-        }
-
         public HashSet<string> getIncludeDirectoriesOfProject(Project project)
         {
             string additionalIncludeDirs = "";
@@ -170,6 +113,101 @@ namespace InheritanceViewer
                 filename = filename.Substring(index + 1, index_dot - index - 1);
 
             return filename;
+        }
+
+        public List<string> GetAllProjectFilesOfActiveDocument(string filename)
+        {
+            List<string> files = new List<string>();
+
+            // Stellen Sie eine Verbindung zu Visual Studio her
+            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+
+            Document vsdoc = null;
+            if (filename != null)
+            {
+
+                // Überprüfen Sie, ob die Datei existiert, bevor Sie sie öffnen
+                if (File.Exists(filename))
+                {
+                    // Öffnen Sie die Datei in Visual Studio
+                    dte.ItemOperations.OpenFile(filename);
+
+                    // Holen Sie das aktuelle Dokument
+                    vsdoc = dte.ActiveDocument;
+                }
+                else
+                {
+                    Console.WriteLine("Die Datei existiert nicht.");
+                }
+            }
+            else if (dte != null && dte.ActiveDocument != null)
+            {
+                vsdoc = dte.ActiveDocument;
+                filename = vsdoc.FullName;
+            }
+
+            Project lproject = null;
+            if (vsdoc != null)
+            {
+                ProjectItem projectItem = vsdoc.ProjectItem;
+
+                if (projectItem != null && projectItem.ContainingProject != null)
+                {
+                    // Hier ist das zugehörige Projekt zu dem aktiven Dokument.
+                    lproject = projectItem.ContainingProject;
+                    // Du kannst das "project" Objekt jetzt verwenden, um auf Projekteigenschaften oder andere Informationen zuzugreifen.
+                    var test = lproject.Name;
+
+                    files = GetAllFilesInProject(lproject);
+                }
+                else
+                {
+
+                }
+            }
+
+            if (filename.EndsWith(".h") && files.Count == 0)
+            {//try get all FilesofactiveDocument with .cpp ending
+                filename = filename.Replace(".h", ".cpp");
+                return GetAllProjectFilesOfActiveDocument(filename);
+            }
+
+            ProjectFilesFinder PFF = new ProjectFilesFinder();
+            PFF.FindHeaderForReachCppFile(lproject, ref files);
+
+            return files;
+        }
+
+        public List<string> GetAllFilesInProject(Project project)
+        {
+            List<string> fileList = new List<string>();
+            if (project != null)
+            {
+                foreach (ProjectItem item in project.ProjectItems)
+                {
+                    // Collect all files recursively
+                    GetAllFilesRecursive(item, fileList);
+                }
+            }
+            return fileList;
+        }
+
+
+        private void GetAllFilesRecursive(ProjectItem projectItem, List<string> fileList)
+        {
+            if (projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile)
+            {
+                // Projectitem is a file
+                fileList.Add(projectItem.FileNames[1]);
+            }
+            else if (projectItem.ProjectItems != null)
+            {
+                // Porjecitem is a folder
+                foreach (ProjectItem item in projectItem.ProjectItems)
+                {
+                    GetAllFilesRecursive(item, fileList);
+                }
+            }
         }
     }
 }

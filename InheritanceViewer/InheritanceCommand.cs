@@ -111,8 +111,9 @@ namespace InheritanceViewer
                 MessageBox.Show(message, title);
             }
 
-            //ProjectFilesFinder lprojectfilefinder = new ProjectFilesFinder();
-            List<string> lall_project_files_of_open_document = GetAllProjectFilesOfActiveDocument();
+            //List<string> lall_project_files_of_open_document = GetAllProjectFilesOfActiveDocument(null);
+            ProjectFilesFinder PFF = new ProjectFilesFinder();
+            List<string> lall_project_files_of_open_document = PFF.GetAllProjectFilesOfActiveDocument(null);
 
 
             //Parse all files and build-up a Dictionary
@@ -133,84 +134,5 @@ namespace InheritanceViewer
             ldgmlwriter.write_file(lgraphbuilder.Classes, lgraphbuilder.Inheritances);
             ldgmlwriter.OpenDGMLFileInEditor();
         }
-
-        public List<string> GetAllProjectFilesOfActiveDocument()
-        {
-            List<string> files = new List<string>();
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            string lactive_filename = "";
-
-            Project lproject = null;
-            if (dte != null && dte.ActiveDocument != null)
-            {
-                Document activeDocument = dte.ActiveDocument;
-                ProjectItem projectItem = activeDocument.ProjectItem;
-
-                lactive_filename = activeDocument.FullName;
-
-                if (projectItem != null && projectItem.ContainingProject != null)
-                {
-                    // Hier ist das zugehörige Projekt zu dem aktiven Dokument.
-                    lproject = projectItem.ContainingProject;
-                    // Du kannst das "project" Objekt jetzt verwenden, um auf Projekteigenschaften oder andere Informationen zuzugreifen.
-                    var test = lproject.Name;
-
-                    files = GetAllFilesInProject(lproject);
-                }
-                else
-                {
-                    
-                }
-            }
-
-            if (lactive_filename.EndsWith(".h") && files.Count == 0)
-            {//try get all FilesofactiveDocument with .cpp ending
-                lactive_filename = lactive_filename.Replace(".h", ".cpp");
-
-                DocumentOpener Do = new DocumentOpener();
-                Do.openfile(lactive_filename);
-                return GetAllProjectFilesOfActiveDocument();
-            }
-
-
-            ProjectFilesFinder PFF = new ProjectFilesFinder();
-            PFF.FindHeaderForReachCppFile(lproject, ref files);
-
-            return files;
-        }
-
-        public List<string> GetAllFilesInProject(Project project)
-        {
-            List<string> fileList = new List<string>();
-            if (project != null)
-            {
-                foreach (ProjectItem item in project.ProjectItems)
-                {
-                    // Collect all files recursively
-                    GetAllFilesRecursive(item, fileList);
-                }
-            }
-            return fileList;
-        }
-
-
-        private void GetAllFilesRecursive(ProjectItem projectItem, List<string> fileList)
-        {
-            if (projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile)
-            {
-                // Projectitem is a file
-                fileList.Add(projectItem.FileNames[1]);
-            }
-            else if (projectItem.ProjectItems != null)
-            {
-                // Porjecitem is a folder
-                foreach (ProjectItem item in projectItem.ProjectItems)
-                {
-                    GetAllFilesRecursive(item, fileList);
-                }
-            }
-        }
-
-        
     }
 }

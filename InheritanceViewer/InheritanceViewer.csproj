@@ -64,7 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Condition="'$(VisualStudioVersion)' &lt; '17'">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+	<Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Condition="'$(VisualStudioVersion)' >= '17'">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
@@ -84,12 +87,13 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icon.png">
+    <Content Include="Icon.png" />
+    <Content Include="Resources\InheritanceCommand.png" />
+    <Content Include="test.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Resources\InheritanceCommand.png" />
-    <Content Include="test.png">
+    <Content Include="Unbenannt.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
