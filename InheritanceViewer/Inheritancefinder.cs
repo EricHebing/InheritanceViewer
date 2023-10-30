@@ -77,22 +77,19 @@ namespace InheritanceViewer
 
         private List<string> GetInheritancesOfClass(string ClassDeclaration)
         {
-            string inheritances = @"(?<=:|,) *(public|protected|private)* *.*?(?=,|{|\n|\r)";
-            Regex rg_inheritance = new Regex(inheritances);
-            MatchCollection matchedinheritances = rg_inheritance.Matches(ClassDeclaration);
-            List<string> inh = matchedinheritances.Cast<Match>().Select(m => m.Value).ToList();
+            //the class of declaration is of type: "class xy : public anotherclass, ...{"
+            ClassDeclaration = ClassDeclaration.Substring(ClassDeclaration.IndexOf(':') + 1);
+            ClassDeclaration = ClassDeclaration.Replace("{", "");
+            ClassDeclaration = ClassDeclaration.Trim();
+            string[] keywords = { "public", "private", "protected" };
+            List<string> splitted = ClassDeclaration.Split(keywords, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             List<string> class_inheritance = new List<string>();
 
-            foreach (var relation in inh)
+            foreach (var relation in splitted)
             {
-                string inherited_class = CaseInsensitiveReplace(relation, "public", "");
-                inherited_class = CaseInsensitiveReplace(inherited_class, "private", "");
-                inherited_class = CaseInsensitiveReplace(inherited_class, "protected", "");
-                inherited_class = inherited_class.Replace(" ", "");
-
+                string inherited_class = relation.Replace(" ", "");
                 class_inheritance.Add(inherited_class);
-
             }
 
             return class_inheritance;
