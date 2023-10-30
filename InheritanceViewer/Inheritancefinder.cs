@@ -111,13 +111,5 @@ namespace InheritanceViewer
             string filetext = reader.ReadToEnd();
             return filetext;
         }
-
-        //Replaces all occurences of <oldvalue> within the originalString by <newValue>
-        string CaseInsensitiveReplace(string originalString, string oldValue, string newValue)
-        {
-            Regex regEx = new Regex(oldValue, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            return regEx.Replace(originalString, newValue);
-        }
-
     }
 }

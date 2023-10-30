@@ -125,8 +125,6 @@ namespace InheritanceViewer
             Document vsdoc = null;
             if (filename != null)
             {
-
-                // Überprüfen Sie, ob die Datei existiert, bevor Sie sie öffnen
                 if (File.Exists(filename))
                 {
                     // Öffnen Sie die Datei in Visual Studio
@@ -137,7 +135,7 @@ namespace InheritanceViewer
                 }
                 else
                 {
-                    Console.WriteLine("Die Datei existiert nicht.");
+                    Console.WriteLine("The following file does not exist but is expected: " + filename);
                 }
             }
             else if (dte != null && dte.ActiveDocument != null)
@@ -150,9 +148,6 @@ namespace InheritanceViewer
                 {
                     // Text aus dem Dokument abrufen
                     string text = textDocument.StartPoint.CreateEditPoint().GetText(textDocument.EndPoint);
-
-                    // Jetzt kannst du den Text verwenden, wie du möchtest
-                    Console.WriteLine("Text aus dem Dokument:\n" + text);
                 }
             }
 
