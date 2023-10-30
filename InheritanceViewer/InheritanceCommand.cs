@@ -95,13 +95,6 @@ namespace InheritanceViewer
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
-
-            //Get all files of the project of the opened file
-            OpenedFileHandler op = new OpenedFileHandler();
-            if (op.Success == false)
-            {//Show an error-message
-                //TODO:
-            }
             //Get name of selected class in active document
             OpenedFileHandler lopened_file_handler = new OpenedFileHandler();
             if (!lopened_file_handler.Success)
@@ -112,17 +105,14 @@ namespace InheritanceViewer
             }
 
             //List<string> lall_project_files_of_open_document = GetAllProjectFilesOfActiveDocument(null);
-            ProjectFilesFinder PFF = new ProjectFilesFinder();
-            List<string> lall_project_files_of_open_document = PFF.GetAllProjectFilesOfActiveDocument(null);
+            List<string> allProjectFilesOfOpenDocument = new ProjectFilesFinder().GetAllProjectFilesOfActiveDocument(null);
 
 
             //Parse all files and build-up a Dictionary
-            Inheritancefinder linheritangefinder = new Inheritancefinder();
-            var inheritDictionary = linheritangefinder.BuildUpInheritanceDictionary(lall_project_files_of_open_document);
+            var inheritDictionary = new Inheritancefinder().BuildUpInheritanceDictionary(allProjectFilesOfOpenDocument);
 
             //Build up the reverse dictionary
-            Inheritedbybuilder lbyBuilder = new Inheritedbybuilder();
-            var linherited_by_dictionary = lbyBuilder.BuildInheritedByList(inheritDictionary);
+            var linherited_by_dictionary = new Inheritedbybuilder().BuildInheritedByList(inheritDictionary);
 
             //Build up nodes(classes) and edges (inheritances)
             Graphbuilder lgraphbuilder = new Graphbuilder();

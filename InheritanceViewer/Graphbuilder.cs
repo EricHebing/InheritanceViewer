@@ -41,10 +41,8 @@ namespace InheritanceViewer
 
         }
 
-        public bool build_up_graph(InheritanceInformation ainheritances, InheritanceInformation ainheritances_by, List<string> Classes)
+        public void build_up_graph(InheritanceInformation ainheritances, InheritanceInformation ainheritances_by, List<string> Classes)
         {
-            bool lsuccess = true;
-
             foreach (string lclass_name in Classes)
             {
                 //class was already added, skip it to avoid duplicates in graph
@@ -60,8 +58,6 @@ namespace InheritanceViewer
             //aselected_class was added twice to the list, so delete it
 
             _classes = _classes.Distinct().ToList();
-
-            return lsuccess;
         }
         void add_inheritance_infos(InheritanceInformation InheritInfo, string aclass, InheritDirection direction )
         {
