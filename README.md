@@ -1,11 +1,13 @@
 # InheritanceViewer
 A Visual Studio extension (VSIX) to  graphically represent C++ Inheritances like Doxygen
 
-![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/ee2e9865-b387-4f1d-bede-5c2c0e3d213c)
+![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/a5cf25b4-3548-4f25-a76e-cfb8fceb114c)
+
 
 
 # How to Use
-![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/25211a10-6153-4900-b971-1d82a7eefdd2)
+![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/b62baa0c-a5c2-4e72-84a9-b1780ad2f9fb)
+
 
 Rightclick anywhere in a header file and select "Inheritance Graph" as shown.
 The extension parses the header file for all C++ class declarations and their inheritance information.
@@ -14,7 +16,8 @@ A Inheritance Graph is build up and written to a temporary .dgml file and shown 
 
 # Prerequisites
 To properly show the generated dgml-file in Visual Studio the DGML-Editor component has to be installed.
-![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/ea9d56f9-5de0-4521-b823-d3d76dbce022)
+![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/668cc1b8-80d0-4339-b3b8-bd41b06a0865)
+
 
 
 If this component is not installed a message is shown in the dgml-file as well.
