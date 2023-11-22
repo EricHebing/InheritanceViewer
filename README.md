@@ -1,5 +1,5 @@
 # InheritanceViewer
-A Visual Studio extension (VSIX) to  graphically represent C++ Inheritances
+A Visual Studio extension (VSIX) to  graphically represent C++ Inheritances like Doxygen
 
 ![image](https://github.com/EricHebing/InheritanceViewer/assets/78701937/ee2e9865-b387-4f1d-bede-5c2c0e3d213c)
 
