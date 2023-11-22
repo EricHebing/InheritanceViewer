@@ -87,10 +87,6 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Resources\InheritanceCommand.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
