@@ -5,16 +5,18 @@
         <DisplayName>InheritanceViewer</DisplayName>
         <Description xml:space="preserve">Lightweigt tool to provide a graphical representation of class inheritances within your C++ application.</Description>
         <Icon>Resources\Icon.png</Icon>
-        <PreviewImage>Icon.png</PreviewImage>
+        <PreviewImage>Resources\Icon.png</PreviewImage>
         <Tags>Inheritance, DGML, Inheritance Graph, C++</Tags>
     </Metadata>
-	<Installation>
-		<InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0,17.0)" />
-		<InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)" Architecture="amd64" />
-		<InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[17.0,18.0)" Architecture="amd64"/>
-		<InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)" Architecture="amd64"/>
-		<InstallationTarget Id="Microsoft.VisualStudio2022" Version="[17.0,18.0)" Architecture="amd64"/>
-	</Installation>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0,17.0)" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)" Architecture="amd64" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[17.0,18.0)" Architecture="amd64"/>
+        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)" Architecture="amd64"/>
+        <InstallationTarget Id="Microsoft.VisualStudio2022" Version="[17.0,18.0)" Architecture="amd64"/>
+        <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
+        <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
+    </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
     </Dependencies>
