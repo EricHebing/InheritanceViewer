@@ -51,6 +51,7 @@ namespace InheritanceViewer
                         {
                             // Text aus dem Dokument abrufen
                             _OpenedFileText = textDocument.StartPoint.CreateEditPoint().GetText(textDocument.EndPoint);
+                            ParseClassesInFile();
                             _Success = true;
                             return;
                         }
@@ -83,7 +84,7 @@ namespace InheritanceViewer
         private void ParseClassesInFile()
         {
             //Lookbehind a "class" and non-capturing whitespaces. Capture all characters until next whitespace or ":" or "{"
-            const string class_name_regex = @"(?<=class) *[^\s:};]* *(?=:|[ \t\n]*{|{)";
+            const string class_name_regex = @"(?<=class) *[^\s:};]* *(?=:|[ \t\r\n]*{|{)";
 
             MatchCollection DeclaredClasses = Regex.Matches(_OpenedFileText, class_name_regex);
             _declaredClassesInFile = DeclaredClasses.Cast<Match>().Select(m => m.Value.Trim()).ToList();

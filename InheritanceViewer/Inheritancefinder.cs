@@ -40,7 +40,11 @@ namespace InheritanceViewer
         }
 
 
-        //
+        /// <summary>
+        /// Finds and extracts C++ class declarations along with their inheritances from the specified file.
+        /// </summary>
+        /// <param name="afilepath">The path to the file to analyze.</param>
+        /// <returns>An instance of InheritanceInformation containing class names and their respective inheritances.</returns>
         public InheritanceInformation Findclassesandinheritance(string afilepath)
         {
             InheritanceInformation foundclasses = new InheritanceInformation();
@@ -77,22 +81,29 @@ namespace InheritanceViewer
 
         private List<string> GetInheritancesOfClass(string ClassDeclaration)
         {
-            string inheritances = @"(?<=:|,) *(public|protected|private)* *.*?(?=,|{|\n|\r)";
-            Regex rg_inheritance = new Regex(inheritances);
-            MatchCollection matchedinheritances = rg_inheritance.Matches(ClassDeclaration);
-            List<string> inh = matchedinheritances.Cast<Match>().Select(m => m.Value).ToList();
-
             List<string> class_inheritance = new List<string>();
+            //the class of declaration is of type: "class xy : public anotherclass, ...{"
+            string classDeclarationWithoutClass = ClassDeclaration.Replace("class", "");
 
-            foreach (var relation in inh)
+            int indexOFInheritanceSeperator = Regex.Match(classDeclarationWithoutClass, "[^:]:[^:]").Index;
+            if (indexOFInheritanceSeperator <0)
+            {//In case of no Inheritance (Split return initial string) return empty list as no inheritances exist
+                return class_inheritance;
+            }
+
+            //2 is added because the [^:] is the first character of the matched regex
+            string inheritances= classDeclarationWithoutClass.Substring(indexOFInheritanceSeperator + 2);
+            inheritances = inheritances.Replace("{", "");
+            inheritances = inheritances.Trim();
+            string[] keywords = { "public", "private", "protected" };
+            List<string> splitted = inheritances.Split(keywords, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            foreach (var relation in splitted)
             {
-                string inherited_class = CaseInsensitiveReplace(relation, "public", "");
-                inherited_class = CaseInsensitiveReplace(inherited_class, "private", "");
-                inherited_class = CaseInsensitiveReplace(inherited_class, "protected", "");
-                inherited_class = inherited_class.Replace(" ", "");
-
+                string inherited_class = relation.Replace(" ", "");
+                //get rid of trailing "," seperating multiple inheritances
+                inherited_class = inherited_class.TrimEnd(',');
                 class_inheritance.Add(inherited_class);
-
             }
 
             return class_inheritance;
@@ -114,13 +125,5 @@ namespace InheritanceViewer
             string filetext = reader.ReadToEnd();
             return filetext;
         }
-
-        //Replaces all occurences of <oldvalue> within the originalString by <newValue>
-        string CaseInsensitiveReplace(string originalString, string oldValue, string newValue)
-        {
-            Regex regEx = new Regex(oldValue, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            return regEx.Replace(originalString, newValue);
-        }
-
     }
 }
