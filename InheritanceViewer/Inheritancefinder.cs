@@ -82,17 +82,16 @@ namespace InheritanceViewer
         private List<string> GetInheritancesOfClass(string ClassDeclaration)
         {
             List<string> class_inheritance = new List<string>();
-            //the class of declaration is of type: "class xy : public anotherclass, ...{"
-            string classDeclarationWithoutClass = ClassDeclaration.Replace("class", "");
+            //the class of declaration is of type: "xy : public anotherclass, ...{"
 
-            int indexOFInheritanceSeperator = Regex.Match(classDeclarationWithoutClass, "[^:]:[^:]").Index;
+            int indexOFInheritanceSeperator = Regex.Match(ClassDeclaration, "[^:]:[^:]").Index;
             if (indexOFInheritanceSeperator <0)
             {//In case of no Inheritance (Split return initial string) return empty list as no inheritances exist
                 return class_inheritance;
             }
 
             //2 is added because the [^:] is the first character of the matched regex
-            string inheritances= classDeclarationWithoutClass.Substring(indexOFInheritanceSeperator + 2);
+            string inheritances= ClassDeclaration.Substring(indexOFInheritanceSeperator + 2);
             inheritances = inheritances.Replace("{", "");
             inheritances = inheritances.Trim();
             string[] keywords = { "public", "private", "protected" };
@@ -111,11 +110,24 @@ namespace InheritanceViewer
 
         private List<string> GetClassDeclarations(string Text)
         {
+            Namespacehandler lnamespacehandler = new Namespacehandler();
+
+            List<NamespaceInfo> lnamespaceinfos = lnamespacehandler.GetAllNamespacesInText(Text);
+
             string classdefs = @"class\s+.+\s*\{";
             Regex RGClassDefs = new Regex(classdefs);
 
             MatchCollection matchedclassdefs = RGClassDefs.Matches(Text);
-            List<string> classes = matchedclassdefs.Cast<Match>().Select(m => m.Value).ToList();
+
+            List<string> classes = new List<string>();
+
+            foreach(Match match in matchedclassdefs)
+            {
+                string classdef = match.Value.Replace("class", "").TrimStart();
+                string namespaceadditionforclass = getNamespaceAddition(match.Index, lnamespaceinfos);
+
+                classes.Add(namespaceadditionforclass + classdef);
+            }
             return classes;
         }
 
@@ -124,6 +136,21 @@ namespace InheritanceViewer
             StreamReader reader = new StreamReader(afilepath);
             string filetext = reader.ReadToEnd();
             return filetext;
+        }
+
+        private string getNamespaceAddition(int startingposition, List<NamespaceInfo> namespaceinfos)
+        {
+            string namespaceaddition = "";
+
+            for (int i = 0; i < namespaceinfos.Count; i++)
+            {//In case of startingposition is within scope of namespace declaration add name of namespace
+                if(namespaceinfos[i].Startpos < startingposition && namespaceinfos[i].Endpos > startingposition)
+                {
+                    namespaceaddition += namespaceinfos[i].Name;
+                }
+            }
+
+            return namespaceaddition;
         }
     }
 }

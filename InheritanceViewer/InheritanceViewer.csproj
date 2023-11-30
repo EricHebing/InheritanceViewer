@@ -52,6 +52,7 @@
     <Compile Include="Inheritancefinder.cs" />
     <Compile Include="Inheritedbybuilder.cs" />
     <Compile Include="DocumentOpener.cs" />
+    <Compile Include="namespacehandler.cs" />
     <Compile Include="OpenedFileHandler.cs" />
     <Compile Include="ProjectFilesFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
