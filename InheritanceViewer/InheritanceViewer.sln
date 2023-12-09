@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InheritanceViewer", "InheritanceViewer.csproj", "{B385F5A6-54B3-4319-9EA4-0D3E32B2C9BE}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IVShared", "..\IVShared\IVShared.shproj", "{546FED72-C45B-41E9-809B-3B5294BEA808}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,5 +23,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F225341C-8A3C-4DFA-BAB8-A0C167D9A348}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\IVShared\IVShared.projitems*{546fed72-c45b-41e9-809b-3b5294bea808}*SharedItemsImports = 13
+		..\IVShared\IVShared.projitems*{b385f5a6-54b3-4319-9ea4-0d3e32b2c9be}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal
